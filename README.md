@@ -17,10 +17,10 @@ This Turborepo includes the following:
 ### Apps and Packages
 
 - `docs`: A placeholder documentation site powered by [Next.js](https://nextjs.org/)
-- `@acme/core`: core React components
-- `@acme/utils`: shared React utilities
-- `@acme/tsconfig`: shared `tsconfig.json`s used throughout the monorepo
-- `eslint-config-acme`: ESLint preset
+- `@this-is-ok/core`: core React components
+- `@this-is-ok/utils`: shared React utilities
+- `@this-is-ok/tsconfig`: shared `tsconfig.json`s used throughout the monorepo
+- `eslint-config-this-is-ok`: ESLint preset
 
 Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -42,10 +42,10 @@ This Turborepo has some additional tools already setup for you:
 
 ### Changing the npm organization scope
 
-The npm organization scope for this design system starter is `@acme`. To change this, it's a bit manual at the moment, but you'll need to do the following:
+The npm organization scope for this design system starter is `@this-is-ok`. To change this, it's a bit manual at the moment, but you'll need to do the following:
 
-- Rename folders in `packages/*` to replace `acme` with your desired scope
-- Search and replace `acme` with your desired scope
+- Rename folders in `packages/*` to replace `this-is-ok` with your desired scope
+- Search and replace `this-is-ok` with your desired scope
 - Re-run `yarn install`
 
 ## Versioning and Publishing packages
