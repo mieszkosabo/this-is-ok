@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "bun:test";
+import { describe, expect, it, test } from "vitest";
 
 import { Option, from, none, some } from "./option";
 
@@ -92,6 +92,33 @@ describe("Option", () => {
   //     console.log("none");
   //   },
   // });
+
+  test("tap", () => {
+    let value = 0;
+
+    some(3).tap((d) => {
+      value += d;
+    });
+
+    expect(value).toBe(3);
+
+    none.tap((d) => {
+      value += d;
+    });
+
+    expect(value).toBe(3);
+  });
+
+  test("tap async", async () => {
+    let value = 0;
+
+    await some(3).tap(async (d) => {
+      await new Promise((resolve) => setTimeout(resolve, 5));
+      value += d;
+    });
+
+    expect(value).toBe(3);
+  });
 
   test("do", () => {
     const onlyPositive = (value: number): Option<number> =>
