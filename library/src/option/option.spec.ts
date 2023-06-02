@@ -1,8 +1,17 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it, test } from "bun:test";
 
-import { Option, none, some } from "./option";
+import { Option, from, none, some } from "./option";
 
 describe("Option", () => {
+  test("from", () => {
+    expect(from(42).unwrap()).toBe(42);
+    expect(from({}).unwrap()).toEqual({});
+    expect(from(NaN).unwrap()).toEqual(NaN);
+    expect(from("").unwrap()).toEqual("");
+    expect(from(null).isNone()).toBe(true);
+    expect(from(undefined).isNone()).toBe(true);
+  });
+
   it("map", () => {
     expect(
       some(3)
@@ -75,12 +84,39 @@ describe("Option", () => {
     none: () => 0,
   });
 
-  const b = some(3).match({
-    some: (d) => {
-      console.log("some");
-    },
-    none: () => {
-      console.log("none");
-    },
+  // const b = some(3).match({
+  //   some: (d) => {
+  //     console.log("some");
+  //   },
+  //   none: () => {
+  //     console.log("none");
+  //   },
+  // });
+
+  test("do", () => {
+    const onlyPositive = (value: number): Option<number> =>
+      value > 0 ? some(value) : none;
+
+    expect(
+      some(10)
+        .do(function* (value) {
+          const a = yield onlyPositive(value);
+          const b = yield onlyPositive(a - 20);
+          const c = yield onlyPositive(b + 30);
+          return some(a + b + c);
+        })
+        .isNone()
+    ).toBe(true);
+
+    expect(
+      some(1)
+        .do(function* (value) {
+          const a = yield some(value);
+          const b = yield some(2);
+          const c = yield some(3);
+          return some(a + b + c);
+        })
+        .unwrap()
+    ).toBe(6);
   });
 });
