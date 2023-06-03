@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, it, test, vitest } from "vitest";
 
 import { Option, from, none, some } from "./option";
 
@@ -121,29 +121,34 @@ describe("Option", () => {
   });
 
   test("do", () => {
-    const onlyPositive = (value: number): Option<number> =>
-      value > 0 ? some(value) : none;
-
     expect(
-      some(10)
-        .do(function* (value) {
-          const a = yield onlyPositive(value);
-          const b = yield onlyPositive(a - 20);
-          const c = yield onlyPositive(b + 30);
-          return some(a + b + c);
+      some(1)
+        .do((value) => {
+          const a = value;
+          const b = some(2).bind();
+          const c = some("hello").bind();
+          return some(c.repeat(a + b));
+        })
+        .unwrap()
+    ).toBe("hellohellohello");
+
+    const fn = vitest.fn();
+    expect(
+      some(1)
+        .do((value) => {
+          const a = value;
+          fn();
+          const b = some(2).bind();
+          fn();
+          const c = (none as Option<number>).bind();
+          fn();
+          const d = some(3).bind();
+          fn();
+          return some(a + b + c + d);
         })
         .isNone()
     ).toBe(true);
 
-    expect(
-      some(1)
-        .do(function* (value) {
-          const a = yield some(value);
-          const b = yield some(2);
-          const c = yield some(3);
-          return some(a + b + c);
-        })
-        .unwrap()
-    ).toBe(6);
+    expect(fn.mock.calls.length).toBe(2);
   });
 });

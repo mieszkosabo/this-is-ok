@@ -245,35 +245,21 @@ export type Option<T> = (
    * with the Option monad.
    * 
    * @example
-    const onlyPositive = (value: number): Option<number> =>
-      value > 0 ? some(value) : none;
-
-    expect(
-      some(10)
-        .do(function* (value) {
-          const a = yield onlyPositive(value);
-          //    ^ number
-          const b = yield onlyPositive(a - 20);
-          //              ^ Option<number>
-          const c = yield onlyPositive(b + 30);
-          return some(a + b + c);
-        })
-        .isNone()
-    ).toBe(true);
-
-    expect(
+     expect(
       some(1)
-        .do(function* (value) {
-          const a = yield some(value);
-          const b = yield some(2);
-          const c = yield some(3);
+        .do((value) => {
+          const a = value;
+          const b = some(2).bind();
+          const c = some(3).bind();
           return some(a + b + c);
         })
         .unwrap()
     ).toBe(6);
    *
    */
-  do: (gen: (value: T) => Generator<Option<T>, Option<T>, T>) => Option<T>;
+  do: <U>(f: (value: T) => Option<U>) => Option<U>;
+  bind: () => T;
+  b: () => T;
 };
 
 export const none: Option<any> = Object.freeze({
@@ -303,10 +289,17 @@ export const none: Option<any> = Object.freeze({
   },
   match: (pattern) => pattern.none(),
   do: () => none,
+  bind: () => {
+    throw "bind";
+  },
+  b: () => {
+    throw "bind";
+  },
 });
 
 export const some = <T>(value: T): Option<T> => {
   const flatMap = <U>(f: (value: T) => Option<U>): Option<U> => f(value);
+  const unwrap = (): T => value;
 
   return {
     variant: "some",
@@ -314,10 +307,10 @@ export const some = <T>(value: T): Option<T> => {
     isSome: () => true,
     isSomeAnd: (predicate) => predicate(value),
     isNone: () => false,
-    expect: () => value,
-    unwrap: () => value,
-    unwrapOr: () => value,
-    unwrapOrElse: () => value,
+    expect: unwrap,
+    unwrap,
+    unwrapOr: unwrap,
+    unwrapOrElse: unwrap,
     map: (f) => some(f(value)),
     mapOr: (_, f) => f(value),
     mapOrElse: (defaultValue, f) => f(value),
@@ -329,22 +322,21 @@ export const some = <T>(value: T): Option<T> => {
     orElse: () => some(value),
     tap: (f) => f(value),
     match: (pattern) => pattern.some(value),
-    do: (gen) => {
-      const iterator = gen(value);
-      let result = iterator.next();
-      while (!result.done) {
-        if (result.value.isNone()) {
-          return none;
-        }
-        result = iterator.next(result.value.unwrap());
+    do: (f) => {
+      try {
+        return f(value);
+      } catch (_) {
+        return none;
       }
-
-      return result.value;
     },
+    bind: unwrap,
+    b: unwrap,
   };
 };
 
 export const from = <T>(value: T | null | undefined): Option<T> =>
   value === null || typeof value === "undefined" ? none : some(value as T);
+
+export const of = from;
 
 // TODO: functions
