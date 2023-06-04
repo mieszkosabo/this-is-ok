@@ -58,23 +58,18 @@ some(1)
   })
   .tap(console, log); // "hellohellohello"
 
-const fn = vitest.fn();
-console.log(
-  some(1).do((value) => {
-    const a = value;
-    console.log(a); // 1
+some(1).do((value) => {
+  const a = value; // 1
 
-    const b = some(2).bind();
-    console.log(b); // 2
+  const b = some(2).bind(); // 2
 
-    const c = (none as Option<number>).bind();
-    // the execution stops here and none is returned
-    // so the following lines are not executed
+  const c = (none as Option<number>).bind();
+  // the execution stops here and none is returned
+  // so the following lines are not executed
 
-    const d = some(3).bind();
-    return some(a + b + c + d);
-  }).isNone
-); // true
+  const d = some(3).bind();
+  return some(a + b + c + d);
+}).isNone; // true
 ```
 
 ### TODO:
