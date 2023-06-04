@@ -4,8 +4,8 @@ An ergonomic way to work with fallible operations in TypeScript.
 
 ### Why this library?
 
-- 🤩 Fully type-safe and ergonomic API that uses popular conventions.
-- 🥳 Comes with a clean and easy to use way to simulate the do-notation.
+- ✨ Fully type-safe, and ergonomic API that uses popular conventions.
+- 🎉 Comes with a clean and easy to use way to simulate the do-notation.
 - ⚡️ Tree-shakable, works with esm, cjs, and doesn't force you to use `nodenext`/`node16` module resolution.
 
 ### Getting started
