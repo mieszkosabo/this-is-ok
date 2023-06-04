@@ -8,15 +8,15 @@ export type Option<T> = (
     }
 ) & {
   /**
-   *  Returns `true` if the option is a `Some` variant and `false` otherwise.
+   *  Property that is `true` if the option is a `Some` variant and `false` otherwise.
    *
    * @example
    * ```ts
-   *  expect(some(3).isSome()).toBe(true)
-   *  expect(none.isSome()).toBe(false)
+   *  expect(some(3).isSome).toBe(true)
+   *  expect(none.isSome).toBe(false)
    * ```
    */
-  isSome: () => boolean;
+  isSome: boolean;
 
   /**
    *  Returns true if the option is a Some variant and the value inside
@@ -31,18 +31,18 @@ export type Option<T> = (
   isSomeAnd: (predicate: (value: T) => boolean) => boolean;
 
   /**
-   *  Returns `true` if the option is a `None` variant and `false` otherwise.
+   *  Property that is `true` if the option is a `None` variant and `false` otherwise.
    *
    * @example
    * ```ts
-   *  expect(none.isNone()).toBe(true)
-   *  expect(some(42).isNone()).toBe(false)
+   *  expect(none.isNone).toBe(true)
+   *  expect(some(42).isNone).toBe(false)
    * ```
    */
-  isNone: () => boolean;
+  isNone: boolean;
 
   /**
-   *  Returns the inner value. tapful for situations where if the
+   *  Returns the inner value. Useful for situations where if the
    *  option is a `None` then there is no tap to continue running the program.
    *  The message can be used for debugging purposes.
    *
@@ -264,9 +264,9 @@ export type Option<T> = (
 
 export const none: Option<any> = Object.freeze({
   variant: "none",
-  isSome: () => false,
+  isSome: false,
   isSomeAnd: () => false,
-  isNone: () => true,
+  isNone: true,
   expect: (message) => {
     throw new Error(`Error: ${message}`);
   },
@@ -304,9 +304,9 @@ export const some = <T>(value: T): Option<T> => {
   return {
     variant: "some",
     value,
-    isSome: () => true,
+    isSome: true,
     isSomeAnd: (predicate) => predicate(value),
-    isNone: () => false,
+    isNone: false,
     expect: unwrap,
     unwrap,
     unwrapOr: unwrap,
