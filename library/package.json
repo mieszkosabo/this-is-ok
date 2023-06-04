@@ -31,11 +31,17 @@
       "import": "./dist/option/index.mjs",
       "require": "./dist/option/index.js",
       "node": "./dist/option/index.js"
+    },
+    "./result": {
+      "types": "./dist/result/index.d.ts",
+      "import": "./dist/result/index.mjs",
+      "require": "./dist/result/index.js",
+      "node": "./dist/result/index.js"
     }
   },
   "scripts": {
-    "build": "tsup --entry src/index.ts --entry src/option/index.ts --format esm,cjs --dts --minify",
-    "dev": "tsup --entry src/index.ts --entry src/option/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup --entry src/index.ts --entry src/option/index.ts --entry src/result/index.ts --format esm,cjs --dts --minify",
+    "dev": "tsup --entry src/index.ts --entry src/option/index.ts --entry src/result/index.ts --format esm,cjs --dts --watch",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint \"src/**/*.ts*\"",

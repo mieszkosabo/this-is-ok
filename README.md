@@ -23,11 +23,59 @@ pnpm add this-is-ok
 
 #### Basic usage
 
-TODO: add some basic usage examples here
+```ts
+// an example of adapting a standard library function to use Option
+const safeParseInt = (value: string): Option<number> => {
+  const parsed = parseInt(value);
+  if (isNaN(parsed)) {
+    return none;
+  }
+  return some(parsed);
+};
+
+// `of` from the option module creates an Option from a nullable value
+of(localStorage.getItem("counter"))
+  // map the inner value to another Option
+  .flatMap((d) => safeParseInt(d))
+  // map the inner value or use a default value if it's none
+  .mapOr(0, (d) => d + 1)
+  // perform any side effect with the value
+  .tap((d) => localStorage.setItem("counter", d.toString()));
+```
 
 #### do notation
 
-TODO: add some do notation examples here
+Do notation lets us write the "happy path" of a function without having to worry about the error handling.
+We access the inner values of options by calling `bind` on them, and if any point, inside the `do` block, `bind` is called on `none`
+then we short-circuit the execution and none is returned.
+
+```ts
+some(1)
+  .do((value) => {
+    const a = some(2).bind();
+    const b = some("hello").bind();
+    return some(b.repeat(value + a));
+  })
+  .tap(console, log); // "hellohellohello"
+
+const fn = vitest.fn();
+console.log(
+  some(1).do((value) => {
+    const a = value;
+    console.log(a); // 1
+
+    const b = some(2).bind();
+    console.log(b); // 2
+
+    const c = (none as Option<number>).bind();
+    // the execution stops here and none is returned
+    // so the following lines are not executed
+
+    const d = some(3).bind();
+    return some(a + b + c + d);
+  }).isNone
+); // true
+```
 
 ### TODO:
 

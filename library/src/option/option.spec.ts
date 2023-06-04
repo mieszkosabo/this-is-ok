@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vitest } from "vitest";
 
-import { Option, from, none, some } from "./option";
+import { Option, from, none, of, some } from "./option";
 
 describe("Option", () => {
   test("from", () => {
@@ -8,8 +8,8 @@ describe("Option", () => {
     expect(from({}).unwrap()).toEqual({});
     expect(from(NaN).unwrap()).toEqual(NaN);
     expect(from("").unwrap()).toEqual("");
-    expect(from(null).isNone()).toBe(true);
-    expect(from(undefined).isNone()).toBe(true);
+    expect(from(null).isNone).toBe(true);
+    expect(from(undefined).isNone).toBe(true);
   });
 
   it("map", () => {
@@ -33,8 +33,7 @@ describe("Option", () => {
       someNone
         .map((d) => d * 8)
         .map((d) => d / 2)
-        .map((d) => d + 1)
-        .isNone()
+        .map((d) => d + 1).isNone
     ).toBe(true);
   });
 
@@ -58,8 +57,7 @@ describe("Option", () => {
       some(3)
         .flatMap((d) => getVariant(d + 1, "some"))
         .flatMap((d) => getVariant(d + 1, "none"))
-        .flatMap((d) => getVariant(d + 1, "some"))
-        .isNone()
+        .flatMap((d) => getVariant(d + 1, "some")).isNone
     ).toBe(true);
   });
 
@@ -134,19 +132,17 @@ describe("Option", () => {
 
     const fn = vitest.fn();
     expect(
-      some(1)
-        .do((value) => {
-          const a = value;
-          fn();
-          const b = some(2).bind();
-          fn();
-          const c = (none as Option<number>).bind();
-          fn();
-          const d = some(3).bind();
-          fn();
-          return some(a + b + c + d);
-        })
-        .isNone()
+      some(1).do((value) => {
+        const a = value;
+        fn();
+        const b = some(2).bind();
+        fn();
+        const c = (none as Option<number>).bind();
+        fn();
+        const d = some(3).bind();
+        fn();
+        return some(a + b + c + d);
+      }).isNone
     ).toBe(true);
 
     expect(fn.mock.calls.length).toBe(2);
