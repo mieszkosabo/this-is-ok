@@ -218,6 +218,8 @@ export type Result<T, E> = (
   do: <U, F>(f: (value: T) => Result<U, F>) => Result<U, F>;
   bind: () => T;
   b: () => T;
+
+  match: <U>(pattern: { ok: (value: T) => U; err: (value: E) => U }) => U;
 };
 
 export const ok = <T>(value: T): Result<T, any> => {
@@ -261,6 +263,7 @@ export const ok = <T>(value: T): Result<T, any> => {
     },
     bind: () => value,
     b: () => value,
+    match: (pattern) => pattern.ok(value),
   };
 };
 
@@ -302,5 +305,6 @@ export const err = <E>(error: E): Result<any, E> => {
     },
     bind,
     b: bind,
+    match: (pattern) => pattern.err(error),
   };
 };
