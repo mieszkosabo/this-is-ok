@@ -1,3 +1,5 @@
+import { Result, err, ok } from "../result";
+
 export type Option<T> = (
   | {
       readonly variant: "none";
@@ -127,8 +129,9 @@ export type Option<T> = (
    * ```
    */
   mapOrElse: <U>(defaultValueFun: () => U, f: (arg: T) => U) => U;
-  // okOr: (err: E) => Result<T, E>
-  // okOrElse: (f: () => E) => Result<T, E>
+
+  okOr: <E>(err: E) => Result<T, E>;
+  okOrElse: <E>(f: () => E) => Result<T, E>;
 
   /**
    *  Returns None if the option is None, otherwise returns `b`.
@@ -282,6 +285,8 @@ export const none: Option<any> = Object.freeze({
   flatMap: () => none,
   andThen: () => none,
   filter: () => none,
+  okOr: (error) => err(error),
+  okOrElse: (error) => err(error()),
   or: (b) => b,
   orElse: (f) => f(),
   tap: <F extends void | Promise<void>>(f: (_: any) => F): F => {
@@ -319,6 +324,8 @@ export const some = <T>(value: T): Option<T> => {
     andThen: flatMap,
     filter: (predicate) => (predicate(value) ? some(value) : none),
     or: () => some(value),
+    okOr: () => ok(value),
+    okOrElse: () => ok(value),
     orElse: () => some(value),
     tap: (f) => f(value),
     match: (pattern) => pattern.some(value),
