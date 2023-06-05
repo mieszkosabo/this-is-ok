@@ -74,7 +74,6 @@ some(1).do((value) => {
 
 ### TODO:
 
-- [ ] (v1) fully tested
 - [ ] (v1) fully documented (generate readme section from JSDoc)
 - [ ] Add github actions for CI
 - [ ] Add to github releases
