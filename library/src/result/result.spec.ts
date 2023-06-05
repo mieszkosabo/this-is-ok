@@ -1,7 +1,7 @@
-import { expect, test, describe } from "vitest";
+import { expect, test, describe, vitest } from "vitest";
 import { Result, err, ok } from "./result";
 
-describe("result", () => {
+describe("Result", () => {
   const okVariant = ok(42);
   const errVariant = err("error");
 
@@ -137,17 +137,44 @@ describe("result", () => {
     expect(errVariant.andThen((v) => err("error1")).unwrapErr()).toBe("error");
   });
 
+  test("flatMap", () => {
+    // same as andThen
+    expect(okVariant.flatMap((v) => ok(v + 1)).unwrap()).toBe(43);
+    expect(okVariant.flatMap((v) => err("error")).unwrapErr()).toBe("error");
+    expect(errVariant.flatMap((v) => ok(v + 1)).unwrapErr()).toBe("error");
+    expect(errVariant.flatMap((v) => err("error1")).unwrapErr()).toBe("error");
+  });
+
   test("do", () => {
     expect(
       okVariant
         .do((v) => {
           expect(v).toBe(42);
           const x = ok(5).bind();
+          const y = ok(5).b();
           expect(x).toBe(5);
-          return ok(v + x);
+          return ok(y + x);
         })
         .unwrap()
-    ).toBe(47);
+    ).toBe(10);
+
+    const fn = vitest.fn();
+    expect(
+      okVariant.do((v) => {
+        fn();
+        const x = err("error").b();
+        fn();
+        return ok(v + x);
+      }).isErr
+    ).toBe(true);
+
+    expect(fn.mock.calls.length).toBe(1);
+
+    expect(
+      errVariant.do((v) => {
+        return ok(v + 1);
+      }).isErr
+    ).toBe(true);
   });
 
   test("match", () => {

@@ -49,6 +49,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
+    "@vitest/coverage-istanbul": "^0.31.4",
+    "@vitest/ui": "^0.31.4",
     "bun": "^0.6.6",
     "bun-types": "^0.6.6",
     "eslint": "^7.32.0",
