@@ -42,7 +42,7 @@
   "scripts": {
     "build": "tsup --entry src/index.ts --entry src/option/index.ts --entry src/result/index.ts --format esm,cjs --dts --minify",
     "dev": "tsup --entry src/index.ts --entry src/option/index.ts --entry src/result/index.ts --format esm,cjs --dts --watch",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:watch": "vitest",
     "lint": "eslint \"src/**/*.ts*\"",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
