@@ -1,5 +1,12 @@
 # this-is-ok
 
+## 0.2.1
+
+### Patch Changes
+
+- full test coverage
+- acadf38: Added unit tests for Result and fixed a few bugs
+
 ## 0.2.0
 
 ### Minor Changes
