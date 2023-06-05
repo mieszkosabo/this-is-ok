@@ -46,7 +46,7 @@ export type Result<T, E> = (
    *  expect(some(42).isSomeAnd((v) => v > 100)).toBe(true)
    * ```
    */
-  isErrAnd: (predicate: (value: T) => boolean) => boolean;
+  isErrAnd: (predicate: (value: E) => boolean) => boolean;
 
   /**
    * Converts from Result<T, E> to Option<T> discarding the error, if any.
@@ -292,12 +292,12 @@ export const err = <E>(error: E): Result<any, E> => {
     unwrapOr: (defaultValue) => defaultValue,
     unwrapOrElse: (defaultValueFun) => defaultValueFun(),
     map: () => err(error),
-    mapOr: (defaultValue, f) => f(defaultValue),
-    mapOrElse: (defaultValueFn, f) => f(defaultValueFn()),
+    mapOr: (defaultValue, _) => defaultValue,
+    mapOrElse: (defaultValueFn, f) => defaultValueFn(),
     mapErr: (f) => err(f(error)),
     and: () => err(error),
     or: (res) => res,
-    orElse: (f) => ok(f()),
+    orElse: (f) => f(),
     andThen: () => err(error),
     flatMap: () => err(error),
     do: () => {
