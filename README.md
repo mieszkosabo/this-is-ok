@@ -75,7 +75,6 @@ some(1).do((value) => {
 ### TODO:
 
 - [ ] (v1) fully documented (generate readme section from JSDoc)
-- [ ] Add github actions for CI
 - [ ] Add to github releases
 - [ ] add function syntax and make them curried (e.g. `map(maybeNumber, x => x + 1)`) apart from method syntax (e.g. `maybeNumber.map(x => x + 1)`)
 - [ ] add adapters for common built-in APIs such as `Map` of `fs` module.
