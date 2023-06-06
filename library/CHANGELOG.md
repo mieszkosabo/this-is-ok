@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.2.2
+
+### Patch Changes
+
+- add result types versions to package.json
+
 ## 0.2.1
 
 ### Patch Changes
