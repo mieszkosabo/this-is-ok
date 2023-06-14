@@ -6,7 +6,7 @@
     <br />
     <a href="https://github.com/mieszkosabo/this-is-ok#api-reference-">API Reference</a>
     ·
-    <a href="https://github.com/mieszkosabo/this-is-ok/issues">Report Bug</a>
+    <a href="https://github.com/mieszkosabo/this-is-ok/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=">Report Bug</a>
     ·
     <a href="https://github.com/mieszkosabo/this-is-ok/issues/new">Request Feature</a>
     ·
