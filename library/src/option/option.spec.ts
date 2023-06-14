@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vitest } from "vitest";
 
-import { Option, from, none, some } from "./option";
+import { Option, none, some } from "./option";
 
 describe("Option", () => {
   const someVariant = some(42);
@@ -41,15 +41,6 @@ describe("Option", () => {
   test("unwrapOrElse", () => {
     expect(someVariant.unwrapOrElse(() => 100)).toBe(42);
     expect(noneVariant.unwrapOrElse(() => 100)).toBe(100);
-  });
-
-  test("from", () => {
-    expect(from(42).unwrap()).toBe(42);
-    expect(from({}).unwrap()).toEqual({});
-    expect(from(NaN).unwrap()).toEqual(NaN);
-    expect(from("").unwrap()).toEqual("");
-    expect(from(null).isNone).toBe(true);
-    expect(from(undefined).isNone).toBe(true);
   });
 
   test("map", () => {

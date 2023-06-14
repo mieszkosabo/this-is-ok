@@ -115,6 +115,9 @@ some(1).do((value) => {
     - [`do: <U>(f: (value: T) => Option<U>) => Option<U>`](#do-uf-value-t--optionu--optionu)
 - [Result](#result)
   - [Creation](#creation-1)
+    - [`of = <T, E>(value: T, error: E): Result<T, E>`](#of--t-evalue-t-error-e-resultt-e)
+    - [`from = <T, E>(fn: () => T, error: E): Result<T, E>`](#from--t-efn---t-error-e-resultt-e)
+    - [`<T, E extends Error>(fn: () => T): Result<T, E>`](#t-e-extends-errorfn---t-resultt-e)
   - [Methods](#methods-1)
     - [`isOk: boolean`](#isok-boolean)
     - [`isOkAnd: (predicate: (value: T) => boolean) => boolean`](#isokand-predicate-value-t--boolean--boolean)
@@ -503,6 +506,73 @@ expect(
 ## Result
 
 ### Creation
+
+#### `of = <T, E>(value: T, error: E): Result<T, E>`
+
+Creates a new `Result<T, E>` from a possibly nullable value and an error.
+
+**Example:**
+
+```ts
+expect(of(42, "error").unwrap()).toBe(42);
+expect(of({}, "error").unwrap()).toEqual({});
+expect(of(NaN, "error").unwrap()).toEqual(NaN);
+expect(of("", "error").unwrap()).toEqual("");
+
+expect(of(null, "error").isErr).toBe(true);
+expect(of(undefined, "error").isErr).toBe(true);
+```
+
+#### `from = <T, E>(fn: () => T, error: E): Result<T, E>`
+
+Creates a new `Result<T, E>` from a function that can throw and an error.
+
+**Example:**
+
+```ts
+expect(from(() => 42, "error").unwrap()).toBe(42);
+expect(from(() => ({}), "error").unwrap()).toEqual({});
+expect(from(() => NaN, "error").unwrap()).toEqual(NaN);
+expect(from(() => "", "error").unwrap()).toEqual("");
+
+expect(from(() => null, "error").isErr).toBe(true);
+expect(from(() => undefined, "error").isErr).toBe(true);
+
+expect(
+  from(() => {
+    throw "error";
+  }, "error").isErr
+).toBe(true);
+```
+
+#### `<T, E extends Error>(fn: () => T): Result<T, E>`
+
+Creates a new `Result<T, E>` from a function that can throw.
+If the function returns any value (including `null` and `undefined`) it is wrapped in an `Ok` variant. If the function throws an error it is wrapped in an `Err` variant. Errors that are not of type `Error` are wrapped in an `Error` object.
+
+**Example:**
+
+```ts
+expect(fromThrowable(() => 42).unwrap()).toBe(42);
+expect(fromThrowable(() => ({})).unwrap()).toEqual({});
+expect(fromThrowable(() => NaN).unwrap()).toEqual(NaN);
+expect(fromThrowable(() => "").unwrap()).toEqual("");
+
+expect(fromThrowable(() => null).unwrap()).toEqual(null);
+expect(fromThrowable(() => undefined).unwrap()).toEqual(undefined);
+
+const a = fromThrowable(() => {
+  throw "error";
+});
+
+expect(a.unwrapErr()).toEqual(new Error("error"));
+
+const b = fromThrowable(() => {
+  throw new Error("error");
+});
+
+expect(b.unwrapErr()).toEqual(new Error("error"));
+```
 
 ### Methods
 
