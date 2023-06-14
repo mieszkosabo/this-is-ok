@@ -340,10 +340,3 @@ export const some = <T>(value: T): Option<T> => {
     b: unwrap,
   };
 };
-
-export const from = <T>(value: T | null | undefined): Option<T> =>
-  value === null || typeof value === "undefined" ? none : some(value as T);
-
-export const of = from;
-
-// TODO: functions
