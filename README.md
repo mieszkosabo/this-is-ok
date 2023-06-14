@@ -4,7 +4,7 @@
     An ergonomic way to work with fallible operations in TypeScript.
     <br />
     <br />
-    <a href="https://github.com/mieszkosabo/this-is-ok#api-reference">API Reference</a>
+    <a href="https://github.com/mieszkosabo/this-is-ok#api-reference-">API Reference</a>
     ·
     <a href="https://github.com/mieszkosabo/this-is-ok/issues">Report Bug</a>
     ·
