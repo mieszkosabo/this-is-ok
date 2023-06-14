@@ -9,6 +9,8 @@
     <a href="https://github.com/mieszkosabo/this-is-ok/issues">Report Bug</a>
     ·
     <a href="https://github.com/mieszkosabo/this-is-ok/issues/new">Request Feature</a>
+    ·
+    <a href="https://github.com/mieszkosabo/this-is-ok#road-map-">Road map</a>
   </p>
 
 ---
@@ -775,7 +777,7 @@ Similar to [match for Option](#do-uf-value-t--optionu--optionu)
 
 # Road map <!-- omit in toc -->
 
-- [ ] (v1) fully documented (generate readme section from JSDoc)
-- [ ] Add to github releases
-- [ ] add function syntax and make them curried (e.g. `map(maybeNumber, x => x + 1)`) apart from method syntax (e.g. `maybeNumber.map(x => x + 1)`)
+- [ ] Task monad for async operations
+- [ ] Use github releases
+- [ ] Add function syntax and make them curried (e.g. `map(maybeNumber, x => x + 1)`) apart from method syntax (e.g. `maybeNumber.map(x => x + 1)`)
 - [ ] add adapters for common built-in APIs such as `Map` of `fs` module.
