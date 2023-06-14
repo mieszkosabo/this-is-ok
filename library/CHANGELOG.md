@@ -1,5 +1,13 @@
 # this-is-ok
 
+## 0.3.0
+
+### Minor Changes
+
+- - update README to add table of contents and API reference
+  - change behaviour of from function in option
+  - add craetion function (of, from, fromThrowable) for Result
+
 ## 0.2.2
 
 ### Patch Changes
