@@ -215,6 +215,7 @@ export type Result<T, E> = (
   andThen: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;
   flatMap: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;
 
+  tap: <F extends void | Promise<void>>(f: (value: T) => F) => F;
   do: <U, F>(f: (value: T) => Result<U, F>) => Result<U, F>;
   bind: () => T;
   b: () => T;
@@ -264,6 +265,7 @@ export const ok = <T>(value: T): Result<T, any> => {
     bind: () => value,
     b: () => value,
     match: (pattern) => pattern.ok(value),
+    tap: (f) => f(value),
   };
 };
 
@@ -306,5 +308,8 @@ export const err = <E>(error: E): Result<any, E> => {
     bind,
     b: bind,
     match: (pattern) => pattern.err(error),
+    tap: <F extends void | Promise<void>>(f: (_: any) => F): F => {
+      return undefined as any;
+    },
   };
 };

@@ -194,4 +194,20 @@ describe("Result", () => {
       })
     ).toBe(6);
   });
+
+  test("tap", () => {
+    let value = 0;
+
+    ok(3).tap((d) => {
+      value += d;
+    });
+
+    expect(value).toBe(3);
+
+    err("aaa").tap((d) => {
+      value += d;
+    });
+
+    expect(value).toBe(3);
+  });
 });
