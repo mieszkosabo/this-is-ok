@@ -1,5 +1,16 @@
 # this-is-ok
 
+## 0.4.0
+
+### Minor Changes
+
+- d5e3c01: add `tap` method to Result
+
+### Patch Changes
+
+- 884f96a: fix type in unwrapEr methodr
+- f0d32e8: better type narrowing
+
 ## 0.3.0
 
 ### Minor Changes
