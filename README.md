@@ -128,7 +128,7 @@ some(1).do((value) => {
     - [`expect: (message: string) => T`](#expect-message-string--t-1)
     - [`unwrap: () => T`](#unwrap---t-1)
     - [`expectErr: (message: string) => T`](#expecterr-message-string--t)
-    - [`unwrapErr: () => T`](#unwraperr---t)
+    - [`unwrapErr: () => E`](#unwraperr---e)
     - [`unwrapOr: (defaultValue: T) => T`](#unwrapor-defaultvalue-t--t-1)
     - [`unwrapOrElse: (defaultValueFun: () => T) => T`](#unwraporelse-defaultvaluefun---t--t-1)
     - [`map: <U>(f: (value: T) => U) => Result<U, E>`](#map-uf-value-t--u--resultu-e)
@@ -691,7 +691,7 @@ expect(err(42).expectErr("should be a number")).toBe(42);
 expect(ok(42).expectErr("this will throw")).toThrow();
 ```
 
-#### `unwrapErr: () => T`
+#### `unwrapErr: () => E`
 
 Returns the contained Err value or throws an error if the result is an `Ok` variant.
 

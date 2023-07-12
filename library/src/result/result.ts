@@ -137,7 +137,7 @@ export type ResultProperties<T, E> = {
    *  expect(ok(42).unwrapErr().toThrow()
    * ```
    */
-  unwrapErr: () => T;
+  unwrapErr: () => E;
 
   /**
    *  Returns the Ok value or the provided default value.
