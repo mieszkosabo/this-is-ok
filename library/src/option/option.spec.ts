@@ -1,10 +1,18 @@
-import { describe, expect, it, test, vitest } from "vitest";
+import { describe, expect, expectTypeOf, it, test, vitest } from "vitest";
 
-import { Option, none, some } from "./option";
+import { NoneVariant, Option, SomeVariant, none, some } from "./option";
 
 describe("Option", () => {
   const someVariant = some(42);
   const noneVariant = none as Option<number>;
+
+  test("type narrowing", () => {
+    if (someVariant.isSome) {
+      expectTypeOf(someVariant).toEqualTypeOf<SomeVariant<number>>();
+    } else {
+      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant>();
+    }
+  });
 
   test("isSome", () => {
     expect(someVariant.isSome).toBe(true);

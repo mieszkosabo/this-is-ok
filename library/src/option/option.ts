@@ -1,14 +1,19 @@
 import { Result, err, ok } from "../result";
 
-export type Option<T> = (
-  | {
-      readonly variant: "none";
-    }
-  | {
-      readonly variant: "some";
-      readonly value: T;
-    }
-) & {
+export type NoneVariant = {
+  readonly variant: "none";
+  isSome: false;
+} & OptionProperties<any>;
+
+export type SomeVariant<T> = {
+  readonly variant: "some";
+  readonly value: T;
+  isSome: true;
+} & OptionProperties<T>;
+
+export type Option<T> = NoneVariant | SomeVariant<T>;
+
+type OptionProperties<T> = {
   /**
    *  Property that is `true` if the option is a `Some` variant and `false` otherwise.
    *

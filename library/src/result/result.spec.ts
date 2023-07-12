@@ -1,9 +1,18 @@
-import { expect, test, describe, vitest } from "vitest";
-import { Result, err, ok } from "./result";
+import { expect, test, describe, vitest, expectTypeOf } from "vitest";
+import { ErrVariant, OkVariant, Result, err, ok } from "./result";
 
 describe("Result", () => {
   const okVariant = ok(42);
   const errVariant = err("error");
+
+  test("type narrowing", () => {
+    const someResult: Result<number, string> = ok(42);
+    if (someResult.isOk) {
+      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number>>();
+    } else {
+      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<string>>();
+    }
+  });
 
   test("isOk", () => {
     expect(okVariant.isOk).toBe(true);

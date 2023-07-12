@@ -1,9 +1,22 @@
 import { Option, none, some } from "../option";
 
-export type Result<T, E> = (
-  | { readonly variant: "ok"; readonly value: T }
-  | { readonly variant: "err"; readonly error: E }
-) & {
+export type OkVariant<T> = {
+  readonly variant: "ok";
+  readonly value: T;
+  isOk: true;
+  isErr: false;
+} & ResultProperties<T, any>;
+
+export type ErrVariant<E> = {
+  readonly variant: "err";
+  readonly error: E;
+  isErr: true;
+  isOk: false;
+} & ResultProperties<any, E>;
+
+export type Result<T, E> = OkVariant<T> | ErrVariant<E>;
+
+export type ResultProperties<T, E> = {
   /**
    * Property that is `true` if the result is Ok.
    * @example
