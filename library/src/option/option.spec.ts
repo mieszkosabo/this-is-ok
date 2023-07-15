@@ -10,11 +10,11 @@ describe("Option", () => {
     if (someVariant.isSome) {
       expectTypeOf(someVariant).toEqualTypeOf<SomeVariant<number>>();
     } else {
-      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant>();
+      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant<number>>();
     }
 
     if (someVariant.isNone) {
-      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant>();
+      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant<number>>();
     } else {
       expectTypeOf(someVariant).toEqualTypeOf<SomeVariant<number>>();
     }
@@ -39,11 +39,13 @@ describe("Option", () => {
 
   test("expect", () => {
     expect(someVariant.expect("error")).toBe(42);
+    expectTypeOf(someVariant.expect("")).toEqualTypeOf<number>();
     expect(() => noneVariant.expect("error")).toThrow("error");
   });
 
   test("unwrap", () => {
     expect(someVariant.unwrap()).toBe(42);
+    expectTypeOf(someVariant.unwrap()).toEqualTypeOf<number>();
     expect(() => noneVariant.unwrap()).toThrow();
   });
 

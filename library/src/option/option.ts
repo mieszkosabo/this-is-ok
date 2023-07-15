@@ -1,10 +1,10 @@
 import { Result, err, ok } from "../result";
 
-export type NoneVariant = {
+export type NoneVariant<T> = {
   readonly variant: "none";
   isSome: false;
   isNone: true;
-} & OptionProperties<any>;
+} & OptionProperties<T>;
 
 export type SomeVariant<T> = {
   readonly variant: "some";
@@ -13,7 +13,7 @@ export type SomeVariant<T> = {
   isNone: false;
 } & OptionProperties<T>;
 
-export type Option<T> = NoneVariant | SomeVariant<T>;
+export type Option<T> = NoneVariant<T> | SomeVariant<T>;
 
 type OptionProperties<T> = {
   /**

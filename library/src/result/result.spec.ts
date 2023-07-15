@@ -2,21 +2,21 @@ import { expect, test, describe, vitest, expectTypeOf } from "vitest";
 import { ErrVariant, OkVariant, Result, err, ok } from "./result";
 
 describe("Result", () => {
-  const okVariant = ok(42);
-  const errVariant = err("error");
+  const okVariant: Result<number, string> = ok(42);
+  const errVariant: Result<number, string> = err("error");
 
   test("type narrowing", () => {
     const someResult: Result<number, string> = ok(42);
     if (someResult.isOk) {
-      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number>>();
+      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number, string>>();
     } else {
-      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<string>>();
+      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<number, string>>();
     }
 
     if (someResult.isErr) {
-      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<string>>();
+      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<number, string>>();
     } else {
-      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number>>();
+      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number, string>>();
     }
   });
 
@@ -38,8 +38,8 @@ describe("Result", () => {
   });
 
   test("isErrAnd", () => {
-    expect(okVariant.isErrAnd((v) => v === 42)).toBe(false);
-    expect(okVariant.isErrAnd((v) => v > 100)).toBe(false);
+    expect(okVariant.isErrAnd((e) => e === "error")).toBe(false);
+    expect(okVariant.isErrAnd((e) => e === "something")).toBe(false);
     expect(errVariant.isErrAnd((e) => e === "error")).toBe(true);
     expect(errVariant.isErrAnd((e) => e === "something")).toBe(false);
   });
@@ -66,12 +66,17 @@ describe("Result", () => {
 
   test("expect", () => {
     expect(okVariant.expect("error")).toBe(42);
+    expectTypeOf(okVariant.expect("error")).toEqualTypeOf<number>();
     expect(() => errVariant.expect("error")).toThrow("error");
+    expectTypeOf(errVariant.expect("error")).toEqualTypeOf<number>();
   });
 
   test("unwrap", () => {
     expect(okVariant.unwrap()).toBe(42);
+    expectTypeOf(okVariant.unwrap()).toEqualTypeOf<number>();
+
     expect(() => errVariant.unwrap()).toThrow();
+    expectTypeOf(errVariant.unwrap()).toEqualTypeOf<number>();
   });
 
   test("unwrapOr", () => {
