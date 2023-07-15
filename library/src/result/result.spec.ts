@@ -68,7 +68,7 @@ describe("Result", () => {
     expect(okVariant.expect("error")).toBe(42);
     expectTypeOf(okVariant.expect("error")).toEqualTypeOf<number>();
     expect(() => errVariant.expect("error")).toThrow("error");
-    expectTypeOf(errVariant.expect("error")).toEqualTypeOf<number>();
+    expectTypeOf(errVariant.expect).toEqualTypeOf<(a: string) => number>();
   });
 
   test("unwrap", () => {
@@ -76,7 +76,7 @@ describe("Result", () => {
     expectTypeOf(okVariant.unwrap()).toEqualTypeOf<number>();
 
     expect(() => errVariant.unwrap()).toThrow();
-    expectTypeOf(errVariant.unwrap()).toEqualTypeOf<number>();
+    expectTypeOf(errVariant.unwrap).toEqualTypeOf<() => number>();
   });
 
   test("unwrapOr", () => {
