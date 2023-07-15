@@ -24,3 +24,15 @@ export const fromThrowable = <T, E extends Error>(
     }
   }
 };
+
+export const Do = <T, E>(fn: () => Result<T, E>): Result<T, E> => {
+  try {
+    return fn();
+  } catch (e) {
+    if (e instanceof Error) {
+      return err(e as E);
+    } else {
+      return err(new Error(`${e}`) as E);
+    }
+  }
+};

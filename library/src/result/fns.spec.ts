@@ -1,5 +1,6 @@
-import { describe, expect, test } from "vitest";
-import { of, from, fromThrowable } from "./fns";
+import { describe, expect, expectTypeOf, test, vitest } from "vitest";
+import { of, from, fromThrowable, Do } from "./fns";
+import { Result, err } from "./result";
 
 describe("Result fns", () => {
   test("of", () => {
@@ -48,5 +49,20 @@ describe("Result fns", () => {
     });
 
     expect(b.unwrapErr()).toEqual(new Error("error"));
+  });
+
+  test("Do", () => {
+    const fn = vitest.fn();
+    const res = Do(() => {
+      const a = of(42, "error").bind();
+      fn();
+      const b = (err("aaa") as Result<number, string>).bind();
+      fn();
+      return of(a + b, "bbb");
+    });
+
+    expectTypeOf(res).toEqualTypeOf<Result<number, string>>();
+    expect(res.isErr).toBe(true);
+    expect(fn).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.4.3
+
+### Patch Changes
+
+- Do as standalone function
+
 ## 0.4.2
 
 ### Patch Changes

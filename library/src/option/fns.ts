@@ -32,3 +32,11 @@ export const from = <T>(fn: () => T | null | undefined): Option<T> => {
     return none;
   }
 };
+
+export const Do = <T>(fn: () => Option<T>): Option<T> => {
+  try {
+    return fn();
+  } catch (_) {
+    return none;
+  }
+};
