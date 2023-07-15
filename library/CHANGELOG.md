@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.4.1
+
+### Patch Changes
+
+- f1c7cd9: fix an issue with type narrowing for Option.isNone
+
 ## 0.4.0
 
 ### Minor Changes
