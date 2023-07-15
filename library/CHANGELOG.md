@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.4.2
+
+### Patch Changes
+
+- fix type bug in unwrap and expect
+
 ## 0.4.1
 
 ### Patch Changes
