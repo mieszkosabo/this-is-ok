@@ -12,6 +12,12 @@ describe("Option", () => {
     } else {
       expectTypeOf(someVariant).toEqualTypeOf<NoneVariant>();
     }
+
+    if (someVariant.isNone) {
+      expectTypeOf(someVariant).toEqualTypeOf<NoneVariant>();
+    } else {
+      expectTypeOf(someVariant).toEqualTypeOf<SomeVariant<number>>();
+    }
   });
 
   test("isSome", () => {

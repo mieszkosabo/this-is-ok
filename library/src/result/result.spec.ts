@@ -12,6 +12,12 @@ describe("Result", () => {
     } else {
       expectTypeOf(someResult).toEqualTypeOf<ErrVariant<string>>();
     }
+
+    if (someResult.isErr) {
+      expectTypeOf(someResult).toEqualTypeOf<ErrVariant<string>>();
+    } else {
+      expectTypeOf(someResult).toEqualTypeOf<OkVariant<number>>();
+    }
   });
 
   test("isOk", () => {

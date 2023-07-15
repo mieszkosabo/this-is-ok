@@ -3,12 +3,14 @@ import { Result, err, ok } from "../result";
 export type NoneVariant = {
   readonly variant: "none";
   isSome: false;
+  isNone: true;
 } & OptionProperties<any>;
 
 export type SomeVariant<T> = {
   readonly variant: "some";
   readonly value: T;
   isSome: true;
+  isNone: false;
 } & OptionProperties<T>;
 
 export type Option<T> = NoneVariant | SomeVariant<T>;
