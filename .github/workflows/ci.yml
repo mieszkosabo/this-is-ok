@@ -53,6 +53,9 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Check types
+        run: pnpm check:types
+
       - name: Monitor coverage
         uses: slavcodev/coverage-monitor-action@v1
         with:
