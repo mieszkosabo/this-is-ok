@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.5.0
+
+### Minor Changes
+
+- 2186ea6: update types for methods such as unwrapOr, unwrapOrElse, ... so that type inference works better when T is a union type. In other words a fix for type variance.
+
 ## 0.4.3
 
 ### Patch Changes
