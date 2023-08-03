@@ -88,7 +88,7 @@ type OptionProperties<T> = {
    *  expect(none.unwrapOr(1).toBe(1)
    * ```
    */
-  unwrapOr: (defaultValue: T) => T;
+  unwrapOr: <T1 extends T>(defaultValue: T1) => T;
 
   /**
    *  Returns the inner value or computes it from a function.
@@ -99,7 +99,7 @@ type OptionProperties<T> = {
    *  expect(none.unwrapOrElse(() => 1).toBe(1)
    * ```
    */
-  unwrapOrElse: (defaultValueFun: () => T) => T;
+  unwrapOrElse: <T1 extends T>(defaultValueFun: () => T1) => T;
 
   /**
    *  Maps an Option<T> to Option<U> by applying a function to a contained
@@ -160,7 +160,7 @@ type OptionProperties<T> = {
    *  expect(none.or(some(1)).unwrap()).toBe(1)
    * ```
    */
-  or: (b: Option<T>) => Option<T>;
+  or: <T1 extends T>(b: Option<T1>) => Option<T>;
 
   /**
    * Returns the option if it contains a value,
@@ -172,7 +172,7 @@ type OptionProperties<T> = {
    * expect(none.orElse(() => some(1)).unwrap()).toBe(1)
    * ```
    */
-  orElse: (f: () => Option<T>) => Option<T>;
+  orElse: <T1 extends T>(f: () => Option<T1>) => Option<T>;
 
   /**
    *  Returns None if the option is None, otherwise calls

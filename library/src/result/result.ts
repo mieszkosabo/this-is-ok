@@ -148,7 +148,7 @@ export type ResultProperties<T, E> = {
    *  expect(err("error").unwrapOr(1).toBe(1)
    * ```
    */
-  unwrapOr: (defaultValue: T) => T;
+  unwrapOr: <T1 extends T>(defaultValue: T1) => T;
 
   /**
    *  Returns the Ok value or computes it from a function.
@@ -159,7 +159,7 @@ export type ResultProperties<T, E> = {
    *  expect(err("error").unwrapOrElse(() => 1).toBe(1)
    * ```
    */
-  unwrapOrElse: (defaultValueFun: () => T) => T;
+  unwrapOrElse: <T1 extends T>(defaultValueFun: () => T1) => T;
 
   /**
    * Maps a Result<T, E> to Result<U, E> by applying a function to a contained Ok value,
@@ -217,13 +217,13 @@ export type ResultProperties<T, E> = {
   /**
    *  Returns res if the result is Err, otherwise returns the Ok value of self.
    */
-  or: <F>(b: Result<T, F>) => Result<T, F>;
+  or: <F, T1 extends T>(b: Result<T1, F>) => Result<T, F>;
 
   /**
    * Returns the option if it contains a value,
    *  otherwise calls f and returns the result.
    */
-  orElse: <F>(f: () => Result<T, F>) => Result<T, F>;
+  orElse: <F, T1 extends T>(f: () => Result<T1, F>) => Result<T, F>;
 
   andThen: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;
   flatMap: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;

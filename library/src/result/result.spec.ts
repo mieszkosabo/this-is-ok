@@ -230,4 +230,14 @@ describe("Result", () => {
 
     expect(value).toBe(3);
   });
+
+  test("variance", () => {
+    type A = { variant: "a"; value: number } | { variant: "b"; val: string };
+
+    const fun = (): Result<A, string> => {
+      const a = ok({ variant: "b" as const, val: "aa" } as const);
+
+      return a;
+    };
+  });
 });

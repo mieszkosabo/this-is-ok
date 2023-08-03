@@ -282,4 +282,14 @@ describe("Option", () => {
     expect(some(3).filter((d) => d === 4).isNone).toBe(true);
     expect(noneVariant.filter((d) => d === 3).isNone).toBe(true);
   });
+
+  test("variance", () => {
+    type A = { variant: "a"; value: number } | { variant: "b"; val: string };
+
+    const fun = (): Option<A> => {
+      const a = some({ variant: "b" as const, val: "aa" } as const);
+
+      return a;
+    };
+  });
 });
