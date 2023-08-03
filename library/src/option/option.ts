@@ -272,78 +272,142 @@ type OptionProperties<T> = {
   b: () => T;
 };
 
-export const none: Option<any> = Object.freeze({
-  variant: "none",
-  isSome: false,
-  isSomeAnd: () => false,
-  isNone: true,
-  expect: (message) => {
-    throw new Error(`Error: ${message}`);
+const noneHandler: ProxyHandler<Option<any>> = {
+  get: (_, prop) => {
+    switch (prop) {
+      case "variant":
+        return "none";
+      case "isSome":
+        return false;
+      case "isNone":
+        return true;
+      case "isSomeAnd":
+        return () => false;
+      case "expect":
+        return (message: any) => {
+          throw new Error(`Error: ${message}`);
+        };
+      case "unwrap":
+        return () => {
+          throw new Error("Error: called `.unwrap()` on none");
+        };
+      case "unwrapOr":
+        return <T>(defaultValue: T) => defaultValue;
+      case "unwrapOrElse":
+        return <T>(getDefaultValue: () => T) => getDefaultValue();
+      case "map":
+        return () => none;
+      case "mapOr":
+        return (defaultValue: any) => defaultValue;
+      case "mapOrElse":
+        return (defaultValue: any) => defaultValue();
+      case "and":
+        return () => none;
+      case "flatMap":
+        return () => none;
+      case "andThen":
+        return () => none;
+      case "filter":
+        return () => none;
+      case "okOr":
+        return (error: any) => err(error);
+      case "okOrElse":
+        return (error: any) => err(error());
+      case "or":
+        return (b: any) => b;
+      case "orElse":
+        return (f: any) => f();
+      case "tap":
+        return <F extends void | Promise<void>>(f: (_: any) => F): F => {
+          return undefined as any;
+        };
+      case "match":
+        return (pattern: any) => pattern.none();
+      case "do":
+        return () => none;
+      case "bind":
+        return () => {
+          throw "bind";
+        };
+      case "b":
+        return () => {
+          throw "bind";
+        };
+    }
   },
-  unwrap: () => {
-    throw new Error("Error: called `.unwrap()` on none");
-  },
-  unwrapOr: <T>(defaultValue: T) => defaultValue,
-  unwrapOrElse: <T>(getDefaultValue: () => T) => getDefaultValue(),
-  map: () => none,
-  mapOr: (defaultValue) => defaultValue,
-  mapOrElse: (defaultValue) => defaultValue(),
-  and: () => none,
-  flatMap: () => none,
-  andThen: () => none,
-  filter: () => none,
-  okOr: (error) => err(error),
-  okOrElse: (error) => err(error()),
-  or: (b) => b,
-  orElse: (f) => f(),
-  tap: <F extends void | Promise<void>>(f: (_: any) => F): F => {
-    return undefined as any;
-  },
-  match: (pattern) => pattern.none(),
-  do: () => none,
-  bind: () => {
-    throw "bind";
-  },
-  b: () => {
-    throw "bind";
-  },
-});
-
-export const some = <T>(value: T): Option<T> => {
-  const flatMap = <U>(f: (value: T) => Option<U>): Option<U> => f(value);
-  const unwrap = (): T => value;
-
-  return {
-    variant: "some",
-    value,
-    isSome: true,
-    isSomeAnd: (predicate) => predicate(value),
-    isNone: false,
-    expect: unwrap,
-    unwrap,
-    unwrapOr: unwrap,
-    unwrapOrElse: unwrap,
-    map: (f) => some(f(value)),
-    mapOr: (_, f) => f(value),
-    mapOrElse: (defaultValue, f) => f(value),
-    and: (b) => b,
-    flatMap,
-    andThen: flatMap,
-    filter: (predicate) => (predicate(value) ? some(value) : none),
-    or: () => some(value),
-    okOr: () => ok(value),
-    okOrElse: () => ok(value),
-    orElse: () => some(value),
-    tap: (f) => f(value),
-    match: (pattern) => pattern.some(value),
-    do: (f) => {
-      try {
-        return f(value);
-      } catch (_) {
-        return none;
-      }
-    },
-    bind: unwrap,
-    b: unwrap,
-  };
 };
+
+export const none: Option<any> = new Proxy(
+  { variant: "none" } as Option<any>,
+  noneHandler
+);
+
+const someHandler: ProxyHandler<Option<any>> = {
+  get: (target, prop) => {
+    const { value } = target as SomeVariant<any>;
+    const flatMap = <U>(f: (value: any) => Option<U>): Option<U> => f(value);
+    const unwrap = (): any => value;
+
+    switch (prop) {
+      case "variant":
+        return "some";
+      case "value":
+        return value;
+      case "isSome":
+        return true;
+      case "isSomeAnd":
+        return (predicate: any) => predicate(value);
+      case "isNone":
+        return false;
+      case "expect":
+        return unwrap;
+      case "unwrap":
+        return unwrap;
+      case "unwrapOr":
+        return unwrap;
+      case "unwrapOrElse":
+        return unwrap;
+      case "map":
+        return (f: any) => some(f(value));
+      case "mapOr":
+        return (_: any, f: any) => f(value);
+      case "mapOrElse":
+        return (defaultValue: any, f: any) => f(value);
+      case "and":
+        return (b: any) => b;
+      case "flatMap":
+        return flatMap;
+      case "andThen":
+        return flatMap;
+      case "filter":
+        return (predicate: any) => (predicate(value) ? some(value) : none);
+      case "or":
+        return () => some(value);
+      case "okOr":
+        return () => ok(value);
+      case "okOrElse":
+        return () => ok(value);
+      case "orElse":
+        return () => some(value);
+      case "tap":
+        return (f: any) => f(value);
+      case "match":
+        return (pattern: any) => pattern.some(value);
+      case "do":
+        return (f: any) => {
+          try {
+            return f(value);
+          } catch (_) {
+            return none;
+          }
+        };
+      case "bind":
+        return unwrap;
+      case "b":
+        return unwrap;
+    }
+  },
+};
+
+export const some = <T>(value: T): Option<T> =>
+  new Proxy({ variant: "some", value } as Option<T>, someHandler);
