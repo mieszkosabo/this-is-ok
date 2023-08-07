@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.6.0
+
+### Minor Changes
+
+- Update internal implemenation to be much more memory efficient
+
 ## 0.5.0
 
 ### Minor Changes
