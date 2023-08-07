@@ -20,6 +20,16 @@ describe("Result", () => {
     }
   });
 
+  test("variant", () => {
+    expect(okVariant.variant).toBe("ok");
+    expect(errVariant.variant).toBe("err");
+  });
+
+  test("value and error", () => {
+    expect((okVariant as OkVariant<any, any>).value).toBe(42);
+    expect((errVariant as ErrVariant<any, any>).error).toBe("error");
+  });
+
   test("isOk", () => {
     expect(okVariant.isOk).toBe(true);
     expect(errVariant.isOk).toBe(false);
