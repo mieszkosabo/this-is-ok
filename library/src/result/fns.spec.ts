@@ -65,4 +65,19 @@ describe("Result fns", () => {
     expect(res.isErr).toBe(true);
     expect(fn).toHaveBeenCalledTimes(1);
   });
+
+  test("Do with Error class", () => {
+    const fn = vitest.fn();
+    const res = Do(() => {
+      const a = of(42, new Error("error")).bind();
+      fn();
+      const b = (err(new Error("aaa")) as Result<number, Error>).bind();
+      fn();
+      return of(a + b, new Error("bbb"));
+    });
+
+    expectTypeOf(res).toEqualTypeOf<Result<number, Error>>();
+    expect(res.isErr).toBe(true);
+    expect(fn).toHaveBeenCalledTimes(1);
+  });
 });

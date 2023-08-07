@@ -20,6 +20,15 @@ describe("Option", () => {
     }
   });
 
+  test("variant", () => {
+    expect(someVariant.variant).toBe("some");
+    expect(noneVariant.variant).toBe("none");
+  });
+
+  test("value", () => {
+    expect((someVariant as SomeVariant<any>).value).toBe(42);
+  });
+
   test("isSome", () => {
     expect(someVariant.isSome).toBe(true);
     expect(noneVariant.isSome).toBe(false);

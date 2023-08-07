@@ -236,93 +236,167 @@ export type ResultProperties<T, E> = {
   match: <U>(pattern: { ok: (value: T) => U; err: (value: E) => U }) => U;
 };
 
-export const ok = <T>(value: T): Result<T, any> => {
-  const unwrap = () => value;
-  const flatMap = <U>(f: (value: T) => Result<U, any>) => f(value);
+const okHandler: ProxyHandler<Result<any, any>> = {
+  get: (target, prop) => {
+    const { value } = target as OkVariant<any, any>;
+    const unwrap = (): any => value;
+    const flatMap = (f: (value: any) => Result<any, any>) => f(value);
 
-  return {
-    variant: "ok",
-    value,
-    isOk: true,
-    isOkAnd: (f) => f(value),
-    isErr: false,
-    isErrAnd: () => false,
-    ok: () => some(value),
-    err: () => none,
-    expect: unwrap,
-    unwrap,
-    expectErr: (message) => {
-      throw new Error(message);
-    },
-    unwrapErr: () => {
-      throw new Error("called `Result.unwrapErr()` on an `Ok` value");
-    },
-    unwrapOr: unwrap,
-    unwrapOrElse: unwrap,
-    map: (f) => ok(f(value)),
-    mapOr: (_, f) => f(value),
-    mapOrElse: (_, f) => f(value),
-    mapErr: (_) => ok(value),
-    and: (b) => b,
-    or: () => ok(value),
-    orElse: () => ok(value),
-    andThen: flatMap,
-    flatMap,
-    do: <U, F>(f: (value: T) => Result<U, F>) => {
-      try {
-        return f(value);
-      } catch (e) {
-        return err(e) as Result<any, F>;
-      }
-    },
-    bind: () => value,
-    b: () => value,
-    match: (pattern) => pattern.ok(value),
-    tap: (f) => f(value),
-  };
+    switch (prop) {
+      case "variant":
+        return "ok";
+      case "value":
+        return value;
+      case "isOk":
+        return true;
+      case "isOkAnd":
+        return (f: any) => f(value);
+      case "isErr":
+        return false;
+      case "isErrAnd":
+        return () => false;
+      case "ok":
+        return () => some(value);
+      case "err":
+        return () => none;
+      case "expect":
+        return unwrap;
+      case "unwrap":
+        return unwrap;
+      case "expectErr":
+        return (message: any) => {
+          throw new Error(message);
+        };
+      case "unwrapErr":
+        return () => {
+          throw new Error("called `Result.unwrapErr()` on an `Ok` value");
+        };
+      case "unwrapOr":
+        return unwrap;
+      case "unwrapOrElse":
+        return unwrap;
+      case "map":
+        return (f: any) => ok(f(value));
+      case "mapOr":
+        return (_: any, f: any) => f(value);
+      case "mapOrElse":
+        return (_: any, f: any) => f(value);
+      case "mapErr":
+        return (_: any) => ok(value);
+      case "and":
+        return (b: any) => b;
+      case "or":
+        return () => ok(value);
+      case "orElse":
+        return () => ok(value);
+      case "andThen":
+        return flatMap;
+      case "flatMap":
+        return flatMap;
+      case "do":
+        return (f: any) => {
+          try {
+            return f(value);
+          } catch (e) {
+            return err(e);
+          }
+        };
+      case "bind":
+        return () => value;
+      case "b":
+        return () => value;
+      case "match":
+        return (pattern: any) => pattern.ok(value);
+      case "tap":
+        return (f: any) => f(value);
+    }
+  },
 };
 
-export const err = <E>(error: E): Result<any, E> => {
-  const unwrap = () => {
-    throw new Error("called `Result.unwrap()` on an `Err` value: " + error);
-  };
+export const ok = <T>(value: T): Result<T, any> =>
+  new Proxy(
+    {
+      variant: "ok",
+      value,
+    } as Result<T, any>,
+    okHandler
+  );
 
-  const bind = () => {
-    throw error;
-  };
+const errHandler: ProxyHandler<Result<any, any>> = {
+  get: (target, prop) => {
+    const { error } = target as ErrVariant<any, any>;
+    const unwrap = () => {
+      throw new Error("called `Result.unwrap()` on an `Err` value: " + error);
+    };
 
-  return {
-    variant: "err",
-    error,
-    isOk: false,
-    isOkAnd: () => false,
-    isErr: true,
-    isErrAnd: (p) => p(error),
-    ok: () => none,
-    err: () => some(error),
-    expect: unwrap,
-    unwrap,
-    expectErr: () => error,
-    unwrapErr: () => error,
-    unwrapOr: (defaultValue) => defaultValue,
-    unwrapOrElse: (defaultValueFun) => defaultValueFun(),
-    map: () => err(error),
-    mapOr: (defaultValue, _) => defaultValue,
-    mapOrElse: (defaultValueFn, f) => defaultValueFn(),
-    mapErr: (f) => err(f(error)),
-    and: () => err(error),
-    or: (res) => res,
-    orElse: (f) => f(),
-    andThen: () => err(error),
-    flatMap: () => err(error),
-    do: () => {
-      return err(error) as any;
-    },
-    bind,
-    b: bind,
-    match: (pattern) => pattern.err(error),
-    tap: <F extends void | Promise<void>>(f: (_: any) => F): F => {
-      return undefined as any;
-    },
-  };
+    const bind = () => {
+      throw error;
+    };
+
+    switch (prop) {
+      case "variant":
+        return "err";
+      case "error":
+        return error;
+      case "isOk":
+        return false;
+      case "isOkAnd":
+        return () => false;
+      case "isErr":
+        return true;
+      case "isErrAnd":
+        return (p: any) => p(error);
+      case "ok":
+        return () => none;
+      case "err":
+        return () => some(error);
+      case "expect":
+        return unwrap;
+      case "unwrap":
+        return unwrap;
+      case "expectErr":
+        return () => error;
+      case "unwrapErr":
+        return () => error;
+      case "unwrapOr":
+        return (defaultValue: any) => defaultValue;
+      case "unwrapOrElse":
+        return (defaultValueFun: any) => defaultValueFun();
+      case "map":
+        return () => err(error);
+      case "mapOr":
+        return (defaultValue: any, _: any) => defaultValue;
+      case "mapOrElse":
+        return (defaultValueFn: any, f: any) => defaultValueFn();
+      case "mapErr":
+        return (f: any) => err(f(error));
+      case "and":
+        return () => err(error);
+      case "or":
+        return (res: any) => res;
+      case "orElse":
+        return (f: any) => f();
+      case "andThen":
+        return () => err(error);
+      case "flatMap":
+        return () => err(error);
+      case "do":
+        return () => {
+          return err(error) as any;
+        };
+      case "bind":
+        return bind;
+      case "b":
+        return bind;
+      case "match":
+        return (pattern: any) => pattern.err(error);
+      case "tap":
+        return <F extends void | Promise<void>>(f: (_: any) => F): F => {
+          return undefined as any;
+        };
+    }
+  },
 };
+
+export const err = <E>(error: E): Result<any, E> =>
+  new Proxy({ variant: "err", error } as Result<any, E>, errHandler);
