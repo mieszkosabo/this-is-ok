@@ -250,4 +250,12 @@ describe("Result", () => {
       return a;
     };
   });
+
+  test("variance for err", () => {
+    const fun = (): Result<number, "a" | "b"> => {
+      const a = err("a" as const);
+
+      return a;
+    };
+  });
 });

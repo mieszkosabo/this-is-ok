@@ -59,7 +59,7 @@ export type ResultProperties<T, E> = {
    *  expect(some(42).isSomeAnd((v) => v > 100)).toBe(true)
    * ```
    */
-  isErrAnd: (predicate: (value: E) => boolean) => boolean;
+  isErrAnd: <E1 extends E>(predicate: (value: E1) => boolean) => boolean;
 
   /**
    * Converts from Result<T, E> to Option<T> discarding the error, if any.
@@ -212,7 +212,7 @@ export type ResultProperties<T, E> = {
   /**
    * Returns res if the result is Ok, otherwise returns the Err value of self.
    */
-  and: <U>(b: Result<U, E>) => Result<U, E>;
+  and: <U, E1 extends E>(b: Result<U, E1>) => Result<U, E>;
 
   /**
    *  Returns res if the result is Err, otherwise returns the Ok value of self.
@@ -225,8 +225,8 @@ export type ResultProperties<T, E> = {
    */
   orElse: <F, T1 extends T>(f: () => Result<T1, F>) => Result<T, F>;
 
-  andThen: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;
-  flatMap: <U>(f: (value: T) => Result<U, E>) => Result<U, E>;
+  andThen: <U, E1 extends E>(f: (value: T) => Result<U, E1>) => Result<U, E>;
+  flatMap: <U, E1 extends E>(f: (value: T) => Result<U, E1>) => Result<U, E>;
 
   tap: <F extends void | Promise<void>>(f: (value: T) => F) => F;
   do: <U, F>(f: (value: T) => Result<U, F>) => Result<U, F>;
