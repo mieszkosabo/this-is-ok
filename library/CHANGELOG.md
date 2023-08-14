@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.6.1
+
+### Patch Changes
+
+- fix types for err variant
+
 ## 0.6.0
 
 ### Minor Changes
