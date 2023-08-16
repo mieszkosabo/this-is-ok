@@ -1,7 +1,9 @@
 import { Result, err, ok } from "./result";
 
-export const of = <T, E>(value: T, error: E): Result<T, E> =>
-  value === null || typeof value === "undefined" ? err(error) : ok(value as T);
+export const of = <T, E>(value: T, error: E): Result<NonNullable<T>, E> =>
+  value === null || typeof value === "undefined"
+    ? err(error)
+    : ok(value as NonNullable<T>);
 
 export const from = <T, E>(fn: () => T, error: E): Result<T, E> => {
   try {

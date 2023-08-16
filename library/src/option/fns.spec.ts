@@ -9,6 +9,13 @@ test("of", () => {
   expect(of("").unwrap()).toEqual("");
   expect(of(null).isNone).toBe(true);
   expect(of(undefined).isNone).toBe(true);
+
+  const fun = (): string | null => {
+    return null;
+  };
+
+  const a = fun();
+  expectTypeOf(of(a)).toEqualTypeOf<Option<string>>();
 });
 
 test("from", () => {

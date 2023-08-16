@@ -11,6 +11,13 @@ describe("Result fns", () => {
 
     expect(of(null, "error").isErr).toBe(true);
     expect(of(undefined, "error").isErr).toBe(true);
+
+    const fun = (): string | null => {
+      return null;
+    };
+
+    const a = fun();
+    expectTypeOf(of(a, "error")).toEqualTypeOf<Result<string, string>>();
   });
 
   test("from", () => {
