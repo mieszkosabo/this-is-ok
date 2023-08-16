@@ -1,5 +1,11 @@
 # this-is-ok
 
+## 0.6.2
+
+### Patch Changes
+
+- fix in of type in result
+
 ## 0.6.1
 
 ### Patch Changes
