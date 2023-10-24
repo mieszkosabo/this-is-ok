@@ -1,5 +1,12 @@
 # this-is-ok
 
+## 0.7.0
+
+### Minor Changes
+
+- 6cd4143: - Added support for async Do (for both monads)
+  - BREAKING: removed the .do API in favor of the standalone Do
+
 ## 0.6.2
 
 ### Patch Changes
