@@ -27,16 +27,22 @@ export const fromThrowable = <T, E extends Error>(
   }
 };
 
-export function Do<T, E>(fn: () => Result<T, E>): Result<T, E>;
-export function Do<T, E>(
-  fn: () => Promise<Result<T, E>>
-): Promise<Result<T, E>>;
-export function Do<T, E>(
-  fn: () => Result<T, E> | Promise<Result<T, E>>
-): Result<T, E> | Promise<Result<T, E>> {
+export function Do<T, E>(fn: () => Result<T, E>): Result<T, E> {
   try {
-    return Promise.resolve(fn()).catch((e) => err(e as E));
+    return fn();
   } catch (e) {
     return err(e as E);
   }
 }
+export async function DoAsync<T, E>(
+  fn: () => Promise<Result<T, E>>
+): Promise<Result<T, E>> {
+  try {
+    return await fn();
+  } catch (e) {
+    return err(e as E);
+  }
+}
+
+export const sequence = <T, E>(results: Result<T, E>[]): Result<T[], E> =>
+  Do(() => ok(results.map((r) => r.bind())));

@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, test, vitest } from "vitest";
-import { of, from, fromThrowable, Do } from "./fns";
+import { of, from, fromThrowable, Do, DoAsync, sequence } from "./fns";
 import { Result, err, ok } from "./result";
 
 describe("Result fns", () => {
@@ -89,13 +89,13 @@ describe("Result fns", () => {
   });
 });
 
-test("async Do", async () => {
+test("DoAsync", async () => {
   const asyncFn = vitest.fn(async () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     return ok(42);
   });
 
-  const res = await Do(async () => {
+  const res = await DoAsync(async () => {
     const a = (await asyncFn()).bind();
     const b = (err("error") as Result<number, string>).bind();
     return of(a + b, "error");
@@ -104,4 +104,18 @@ test("async Do", async () => {
   expectTypeOf(res).toEqualTypeOf<Result<number, string>>();
   expect(res.isErr).toBe(true);
   expect(asyncFn).toHaveBeenCalledTimes(1);
+});
+
+describe("sequence", () => {
+  test("empty", () => {
+    expect(sequence([]).unwrap()).toEqual([]);
+  });
+
+  test("happy case", () => {
+    expect(sequence([ok(42), ok(43)]).unwrap()).toEqual([42, 43]);
+  });
+
+  test("bad case", () => {
+    expect(sequence([ok(42), err("error"), ok(43)]).isErr).toBe(true);
+  });
 });

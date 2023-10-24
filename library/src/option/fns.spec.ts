@@ -1,5 +1,5 @@
-import { expect, expectTypeOf, test, vitest } from "vitest";
-import { Do, from, of } from "./fns";
+import { describe, expect, expectTypeOf, test, vitest } from "vitest";
+import { Do, DoAsync, from, of, sequence } from "./fns";
 import { Option, none } from "./option";
 
 test("of", () => {
@@ -54,7 +54,7 @@ test("Do async", async () => {
     return of(42);
   });
 
-  const res = await Do(async () => {
+  const res = await DoAsync(async () => {
     const a = (await asyncFn()).bind();
     const b = (none as Option<number>).bind();
     return of(a + b);
@@ -63,4 +63,18 @@ test("Do async", async () => {
   expectTypeOf(res).toEqualTypeOf<Option<number>>();
   expect(res.isNone).toBe(true);
   expect(asyncFn).toHaveBeenCalledTimes(1);
+});
+
+describe("sequence", () => {
+  test("empty", () => {
+    expect(sequence([]).unwrap()).toEqual([]);
+  });
+
+  test("happy case", () => {
+    expect(sequence([of(42), of(43)]).unwrap()).toEqual([42, 43]);
+  });
+
+  test("bad case", () => {
+    expect(sequence([of(42), none, of(43)]).isNone).toBe(true);
+  });
 });

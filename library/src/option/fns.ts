@@ -49,14 +49,22 @@ export const from = <T>(fn: () => T | null | undefined): Option<T> => {
     ).toBe(6);
    *
    */
-export function Do<T>(fn: () => Option<T>): Option<T>;
-export function Do<T>(fn: () => Promise<Option<T>>): Promise<Option<T>>;
-export function Do<T>(
-  fn: () => Option<T> | Promise<Option<T>>
-): Option<T> | Promise<Option<T>> {
+export function Do<T>(fn: () => Option<T>): Option<T> {
   try {
-    return Promise.resolve(fn()).catch(() => none);
+    return fn();
   } catch (_) {
     return none;
   }
 }
+export async function DoAsync<T>(
+  fn: () => Promise<Option<T>>
+): Promise<Option<T>> {
+  try {
+    return await fn();
+  } catch {
+    return none;
+  }
+}
+
+export const sequence = <T>(options: Option<T>[]): Option<T[]> =>
+  Do(() => some(options.map((option) => option.bind())));
