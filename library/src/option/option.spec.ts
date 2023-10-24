@@ -243,45 +243,6 @@ describe("Option", () => {
     expect(value).toBe(3);
   });
 
-  test("do", () => {
-    expect(
-      some(1)
-        .do((value) => {
-          const a = value;
-          const b = some(2).bind();
-          const c = some("hello").b();
-          return some(c.repeat(a + b));
-        })
-        .unwrap()
-    ).toBe("hellohellohello");
-
-    const fn = vitest.fn();
-    expect(
-      some(1).do((value) => {
-        const a = value;
-        fn();
-        const b = some(2).bind();
-        fn();
-        const c = (none as Option<number>).b();
-        fn();
-        const d = some(3).bind();
-        fn();
-        return some(a + b + c + d);
-      }).isNone
-    ).toBe(true);
-
-    expect(
-      some(1).do((value) => {
-        (none as Option<number>).bind();
-        return some(value);
-      }).isNone
-    ).toBe(true);
-
-    expect(noneVariant.do(() => some(1)).isNone).toBe(true);
-
-    expect(fn.mock.calls.length).toBe(2);
-  });
-
   test("filter", () => {
     expect(
       some(3)

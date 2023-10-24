@@ -27,14 +27,16 @@ export const fromThrowable = <T, E extends Error>(
   }
 };
 
-export const Do = <T, E>(fn: () => Result<T, E>): Result<T, E> => {
+export function Do<T, E>(fn: () => Result<T, E>): Result<T, E>;
+export function Do<T, E>(
+  fn: () => Promise<Result<T, E>>
+): Promise<Result<T, E>>;
+export function Do<T, E>(
+  fn: () => Result<T, E> | Promise<Result<T, E>>
+): Result<T, E> | Promise<Result<T, E>> {
   try {
-    return fn();
+    return Promise.resolve(fn()).catch((e) => err(e as E));
   } catch (e) {
-    if (e instanceof Error) {
-      return err(e as E);
-    } else {
-      return err(new Error(`${e}`) as E);
-    }
+    return err(e as E);
   }
-};
+}

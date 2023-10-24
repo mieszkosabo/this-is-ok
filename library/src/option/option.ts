@@ -250,24 +250,6 @@ type OptionProperties<T> = {
    */
   match: <U>(pattern: { some: (value: T) => U; none: () => U }) => U;
 
-  /**
-   * Lets you simulate a do-notation known from functional languages
-   * with the Option monad.
-   * 
-   * @example
-     expect(
-      some(1)
-        .do((value) => {
-          const a = value;
-          const b = some(2).bind();
-          const c = some(3).bind();
-          return some(a + b + c);
-        })
-        .unwrap()
-    ).toBe(6);
-   *
-   */
-  do: <U>(f: (value: T) => Option<U>) => Option<U>;
   bind: () => T;
   b: () => T;
 };
@@ -323,8 +305,6 @@ const noneHandler: ProxyHandler<Option<any>> = {
         };
       case "match":
         return (pattern: any) => pattern.none();
-      case "do":
-        return () => none;
       case "bind":
         return () => {
           throw "bind";
@@ -393,14 +373,6 @@ const someHandler: ProxyHandler<Option<any>> = {
         return (f: any) => f(value);
       case "match":
         return (pattern: any) => pattern.some(value);
-      case "do":
-        return (f: any) => {
-          try {
-            return f(value);
-          } catch (_) {
-            return none;
-          }
-        };
       case "bind":
         return unwrap;
       case "b":

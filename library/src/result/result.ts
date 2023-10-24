@@ -229,7 +229,6 @@ export type ResultProperties<T, E> = {
   flatMap: <U, E1 extends E>(f: (value: T) => Result<U, E1>) => Result<U, E>;
 
   tap: <F extends void | Promise<void>>(f: (value: T) => F) => F;
-  do: <U, F>(f: (value: T) => Result<U, F>) => Result<U, F>;
   bind: () => T;
   b: () => T;
 
@@ -293,14 +292,6 @@ const okHandler: ProxyHandler<Result<any, any>> = {
         return flatMap;
       case "flatMap":
         return flatMap;
-      case "do":
-        return (f: any) => {
-          try {
-            return f(value);
-          } catch (e) {
-            return err(e);
-          }
-        };
       case "bind":
         return () => value;
       case "b":
@@ -380,10 +371,6 @@ const errHandler: ProxyHandler<Result<any, any>> = {
         return () => err(error);
       case "flatMap":
         return () => err(error);
-      case "do":
-        return () => {
-          return err(error) as any;
-        };
       case "bind":
         return bind;
       case "b":

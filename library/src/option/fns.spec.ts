@@ -47,3 +47,20 @@ test("Do", () => {
   expect(res.isNone).toBe(true);
   expect(fn).toHaveBeenCalledTimes(1);
 });
+
+test("Do async", async () => {
+  const asyncFn = vitest.fn(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    return of(42);
+  });
+
+  const res = await Do(async () => {
+    const a = (await asyncFn()).bind();
+    const b = (none as Option<number>).bind();
+    return of(a + b);
+  });
+
+  expectTypeOf(res).toEqualTypeOf<Option<number>>();
+  expect(res.isNone).toBe(true);
+  expect(asyncFn).toHaveBeenCalledTimes(1);
+});

@@ -175,38 +175,6 @@ describe("Result", () => {
     expect(errVariant.flatMap((v) => err("error1")).unwrapErr()).toBe("error");
   });
 
-  test("do", () => {
-    expect(
-      okVariant
-        .do((v) => {
-          expect(v).toBe(42);
-          const x = ok(5).bind();
-          const y = ok(5).b();
-          expect(x).toBe(5);
-          return ok(y + x);
-        })
-        .unwrap()
-    ).toBe(10);
-
-    const fn = vitest.fn();
-    expect(
-      okVariant.do((v) => {
-        fn();
-        const x = err("error").b();
-        fn();
-        return ok(v + x);
-      }).isErr
-    ).toBe(true);
-
-    expect(fn.mock.calls.length).toBe(1);
-
-    expect(
-      errVariant.do((v) => {
-        return ok(v + 1);
-      }).isErr
-    ).toBe(true);
-  });
-
   test("match", () => {
     const okVariant2 = okVariant as Result<number, string>;
     const errVariant2 = err("error") as Result<number, string>;

@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, test, vitest } from "vitest";
 import { of, from, fromThrowable, Do } from "./fns";
-import { Result, err } from "./result";
+import { Result, err, ok } from "./result";
 
 describe("Result fns", () => {
   test("of", () => {
@@ -87,4 +87,21 @@ describe("Result fns", () => {
     expect(res.isErr).toBe(true);
     expect(fn).toHaveBeenCalledTimes(1);
   });
+});
+
+test("async Do", async () => {
+  const asyncFn = vitest.fn(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    return ok(42);
+  });
+
+  const res = await Do(async () => {
+    const a = (await asyncFn()).bind();
+    const b = (err("error") as Result<number, string>).bind();
+    return of(a + b, "error");
+  });
+
+  expectTypeOf(res).toEqualTypeOf<Result<number, string>>();
+  expect(res.isErr).toBe(true);
+  expect(asyncFn).toHaveBeenCalledTimes(1);
 });
