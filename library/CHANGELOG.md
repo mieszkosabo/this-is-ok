@@ -1,5 +1,12 @@
 # this-is-ok
 
+## 0.8.0
+
+### Minor Changes
+
+- 52a3393: - replace overloaded Do with Do and DoAsync
+  - add `sequence` function that transforms Option<T>[] into Option<T[]> (and simile for Result)
+
 ## 0.7.0
 
 ### Minor Changes
